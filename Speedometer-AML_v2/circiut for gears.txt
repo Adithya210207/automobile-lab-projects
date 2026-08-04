@@ -1,0 +1,13 @@
+Brown  ─────────────────────────────► Arduino 5V
+
+White  ──────┬──────────────────────► Arduino D2
+              │
+             [5kΩ resistor]
+              │
+             GND
+
+Blue   ──────┬──────────────────────► Arduino D3
+              │
+             [5kΩ resistor]					
+              │
+             GND

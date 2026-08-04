@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STM32 Speedometer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main class="app">
+        <header class="topbar">
+            <div class="title">
+                <div class="title__headline">Speedometer <span class="title__version">v5</span></div>
+                <div class="title__sub">Live throttle → speed (STM32F407)</div>
+            </div>
+            <div class="conn">
+                <button id="btn-connect" class="btn btn--primary" type="button">Connect</button>
+                <button id="btn-disconnect" class="btn" type="button" disabled>Disconnect</button>
+                <div class="conn__meta">
+                    <div id="conn-status" class="pill pill--warn">Not connected</div>
+                    <div id="input-source" class="pill">Source: slider</div>
+                    <div id="cruise-pill" class="pill pill--warn">Cruise: off</div>
+                    <div id="acc-pill" class="pill pill--warn">ACC: off</div>
+                </div>
+            </div>
+        </header>
+
+        <section class="panel">
+            <div class="gauge">
+                <svg class="gauge__svg" viewBox="0 0 360 220" role="img" aria-label="Speed gauge">
+                    <defs>
+                        <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="rgba(0,168,255,0.85)"/>
+                            <stop offset="55%" stop-color="rgba(0,255,153,0.9)"/>
+                            <stop offset="100%" stop-color="rgba(255,155,64,0.85)"/>
+                        </linearGradient>
+                    </defs>
+                    <path id="arc-bg" class="gauge__arc gauge__arc--bg"
+                        d="M 40 190 A 140 140 0 0 1 320 190" />
+                    <path id="arc-fg" class="gauge__arc gauge__arc--fg"
+                        d="M 40 190 A 140 140 0 0 1 320 190"
+                        pathLength="100"
+                        stroke-dasharray="0 100"
+                        stroke-dashoffset="0" />
+
+                    <g class="gauge__ticks">
+                        <line x1="40" y1="190" x2="54" y2="190" />
+                        <line x1="81" y1="91" x2="90.9" y2="100.9" />
+                        <line x1="180" y1="50" x2="180" y2="64" />
+                        <line x1="279" y1="91" x2="269.1" y2="100.9" />
+                        <line x1="320" y1="190" x2="306" y2="190" />
+                    </g>
+
+                    <g class="gauge__tick-labels">
+                        <text x="30" y="208" text-anchor="middle">0</text>
+                        <text x="73.9" y="80" text-anchor="middle">50</text>
+                        <text x="180" y="34" text-anchor="middle">100</text>
+                        <text x="286.1" y="80" text-anchor="middle">150</text>
+                        <text x="330" y="208" text-anchor="middle">200</text>
+                    </g>
+
+                    <g id="needle" class="gauge__needle" transform="translate(180 190) rotate(-90)">
+                        <polygon points="-6,0 0,-120 6,0" />
+                        <circle r="12" />
+                    </g>
+                </svg>
+
+                <div class="readout">
+                    <div class="readout__value">
+                        <span id="speed-value">0</span>
+                        <span class="readout__unit">km/h</span>
+                    </div>
+                    <div class="readout__small">
+                        <span class="label">Throttle</span>
+                        <span id="throttle-pct">0</span><span class="muted">%</span>
+                        <span class="sep">•</span>
+                        <span class="label">Mode</span>
+                        <span id="mode-label">Eco</span>
+                        <span class="sep">•</span>
+                        <span id="dir-label" class="dir-label dir-label--fwd">Forward</span>
+                        <span class="sep">•</span>
+                        <span class="label">Gap</span>
+                        <span id="dist-value">--</span><span class="muted">m</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <div class="control">
+                    <div class="control__row">
+                        <div class="control__label">Throttle (fallback)</div>
+                        <div class="control__hint">Used when not connected</div>
+                    </div>
+                    <input type="range" id="throttle" min="0" max="100" value="0" step="0.1" class="slider" aria-label="Throttle slider">
+                </div>
+
+                <div class="modes" role="group" aria-label="Drive mode">
+                    <button id="mode-eco" class="btn btn--mode is-active" type="button">Eco</button>
+                    <button id="mode-normal" class="btn btn--mode" type="button">Normal</button>
+                    <button id="mode-sport" class="btn btn--mode" type="button">Sport</button>
+                </div>
+
+                <div class="modes modes--dir" role="group" aria-label="Direction (fallback)">
+                    <button id="dir-forward" class="btn btn--mode is-active" type="button">Forward</button>
+                    <button id="dir-reverse" class="btn btn--mode btn--reverse" type="button">Reverse (max 5 km/h)</button>
+                </div>
+
+                <details class="help">
+                    <summary>STM32 serial format</summary>
+                    <div class="help__body">
+                        Send lines over UART/USB like: <code>1234</code> (ADC 0–4095), <code>ADC=1234</code>, or <code>THR=45.2</code> (%). One value per line (<code>\n</code>).
+                        <br><br>
+                        Gear can be sent on the same line as the ADC value: <code>ADC=1234,GEAR=2</code>, where <code>GEAR</code> is <code>1</code>=Eco, <code>2</code>=Normal, <code>3</code>=Sport, read from the handlebar rocker switch. When connected, gear is driven by the switch and the on-screen mode buttons are disabled.
+                        <br><br>
+                        Direction can be included too: <code>ADC=1234,GEAR=2,DIR=1</code>, where <code>DIR</code> is <code>1</code>=Forward, <code>2</code>=Reverse, read from the F/R rocker switch. Reverse caps speed at 5 km/h regardless of gear. When connected, the on-screen Forward/Reverse buttons are disabled.
+                        <br><br>
+                        Cruise status can be included too: <code>ADC=1234,GEAR=2,DIR=1,CRUISE=1</code>, where <code>CRUISE</code> is <code>1</code>=engaged, <code>0</code>=off. While engaged, the Arduino sends a held/latched ADC value instead of the live throttle reading, so the gauge holds steady.
+                        <br><br>
+                        Adaptive cruise (gap control) adds two more fields: <code>ADC=1234,GEAR=2,DIR=1,CRUISE=0,ACC=1,DIST=2221</code>, where <code>ACC</code> is <code>1</code>=engaged, <code>0</code>=off, and <code>DIST</code> is the live TOF sensor reading in millimetres, or <code>-1</code> when no valid target is in range. ACC and CRUISE are mutually exclusive — engaging one cancels the other. While ACC is engaged, the gauge's speed is driven entirely by the gap controller in the browser, not by the throttle handle.
+                    </div>
+                </details>
+            </div>
+        </section>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>

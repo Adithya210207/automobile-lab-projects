@@ -1,0 +1,66 @@
+For Gear:
+Brown  ─────────────────────────────► Arduino 5V
+
+White  ──────┬──────────────────────► Arduino D2
+              │
+             [5kΩ resistor]
+              │
+             GND
+
+Blue   ──────┬──────────────────────► Arduino D3
+              │
+             [5kΩ resistor]
+              │
+             GND
+
+for F/R:
+Purple  ─────────────────────────────► Arduino 5V
+
+Yellow   ──────┬──────────────────────► Arduino D4
+              │
+             [5kΩ resistor]
+              │
+             GND
+
+Cruise Button:
+
+5V ──── leg 1 [ BUTTON ] leg 2 ──┬──── Arduino D5
+                                   │
+                                [5kΩ]
+                                   │
+                                  GND
+             
+
+Brake (placeholder button for now):
+
+5V ──── leg 1 [ BUTTON ] leg 2 ──┬──── Arduino D6
+                                   │
+                                [5kΩ]
+                                   │
+                                  GND
+
+ACC toggle button (adaptive cruise / gap control):
+
+5V ──── leg 1 [ BUTTON ] leg 2 ──┬──── Arduino D9
+                                   │
+                                [5kΩ]
+                                   │
+                                  GND
+
+TOF sensor (Waveshare TOF Laser Range Sensor D, UART mode):
+Reconfigure sensor baud to 115200 via TOF Assistant BEFORE wiring in —
+SoftwareSerial can't reliably hold the 921600 default.
+
+Sensor TX  ─────────────────────────► Arduino D7 (RX)
+Sensor RX  ─────────────────────────► Arduino D8 (TX, unused for reading)
+Sensor VCC ─────────────────────────► per datasheet
+Sensor GND ─────────────────────────► GND
+             
+            
+
+
+
+
+
+
+

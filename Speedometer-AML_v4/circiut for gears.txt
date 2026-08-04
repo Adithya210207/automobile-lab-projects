@@ -1,0 +1,23 @@
+For Gear:
+Brown  ─────────────────────────────► Arduino 5V
+
+White  ──────┬──────────────────────► Arduino D2
+              │
+             [5kΩ resistor]
+              │
+             GND
+
+Blue   ──────┬──────────────────────► Arduino D3
+              │
+             [5kΩ resistor]
+              │
+             GND
+
+for F/R:
+Purple  ─────────────────────────────► Arduino 5V
+
+Yellow   ──────┬──────────────────────► Arduino D4
+              │
+             [5kΩ resistor]
+              │
+             GND

@@ -1,0 +1,49 @@
+For Gear:
+Brown  ─────────────────────────────► Arduino 5V
+
+White  ──────┬──────────────────────► Arduino D2
+              │
+             [5kΩ resistor]
+              │
+             GND
+
+Blue   ──────┬──────────────────────► Arduino D3
+              │
+             [5kΩ resistor]
+              │
+             GND
+
+for F/R:
+Purple  ─────────────────────────────► Arduino 5V
+
+Yellow   ──────┬──────────────────────► Arduino D4
+              │
+             [5kΩ resistor]
+              │
+             GND
+
+Cruise Button:
+
+5V ──── leg 1 [ BUTTON ] leg 2 ──┬──── Arduino D5
+                                   │
+                                [5kΩ]
+                                   │
+                                  GND
+             
+
+Brake (placeholder button for now):
+
+5V ──── leg 1 [ BUTTON ] leg 2 ──┬──── Arduino D6
+                                   │
+                                [5kΩ]
+                                   │
+                                  GND
+             
+            
+
+
+
+
+
+
+
