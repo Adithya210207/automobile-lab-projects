@@ -44,3 +44,11 @@ Automobile Lab Projects (AML)/
 ├── Speedometer-AML_v5/            # Prototype 2 (Brake Safety & Spike Auto-cancel)
 └── Speedometer-AML_v6/            # Prototype 3 (Waveshare TOF Laser ACC Gap Control)
 ```
+
+---
+
+## 📄 License
+
+Created by **Adithya V**.
+Licensed under the [MIT License](./LICENSE).
+
