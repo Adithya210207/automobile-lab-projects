@@ -51,7 +51,7 @@ Automobile Lab Projects (AML)/
 
 **© 2026 Adithya V. All Rights Reserved.**
 
-This repository is published for portfolio, demonstration, and educational viewing purposes only. You are welcome to view the source code to understand the implementation.
+This repository is published for portfolio, demonstration, and educational viewing purposes only. You are welcome to view the source code to understand the implementation. Downloading, running or deploying a copy is not permitted without permission.
 
 ### You may NOT:
 
@@ -62,4 +62,6 @@ This repository is published for portfolio, demonstration, and educational viewi
 - Remove copyright notices or claim this work as your own.
 
 If you would like to use any part of this project, please contact me first for permission.
+
+The full legal terms are in the [**LICENSE**](LICENSE) file.
 
